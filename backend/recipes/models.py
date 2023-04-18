@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
 
-ModUser = get_user_model()
+UserModel = get_user_model()
 
 
 class Tag(models.Model):  # создаются лишь админом
@@ -56,7 +56,7 @@ class Ingredient(models.Model):
 class Recipe(models.Model):
 
     author = models.ForeignKey(
-        ModUser,
+        UserModel,
         on_delete=models.CASCADE,
         related_name='recipes',
         verbose_name='Автор рецепта',
@@ -150,7 +150,7 @@ class IngredientsRecipe(models.Model):
 class ShoppingList(models.Model):
 
     user = models.ForeignKey(
-        ModUser,
+        UserModel,
         on_delete=models.CASCADE,
         related_name='list',
         verbose_name='Составитель списка покупок'
@@ -182,7 +182,7 @@ class ShoppingList(models.Model):
 class Favorite(models.Model):
 
     user = models.ForeignKey(
-        ModUser,
+        UserModel,
         on_delete=models.CASCADE,
         related_name='favorites',
         verbose_name='Автор списка "Избранное"'

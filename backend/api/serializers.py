@@ -10,7 +10,7 @@ from rest_framework.validators import UniqueTogetherValidator
 from users.models import Follow
 from recipes.models import (Ingredient, IngredientsRecipe, Recipe, Tag)
 
-ModUser = get_user_model()
+UserModel = get_user_model()
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -46,7 +46,7 @@ class UserCustomSerializer(serializers.ModelSerializer):
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
-        model = ModUser
+        model = UserModel
         fields = (
             'email', 'username', 'first_name',
             'last_name', 'password', 'id', 'is_subscribed'
@@ -74,7 +74,7 @@ class UserCustomSerializer(serializers.ModelSerializer):
 class UserCustomCreateSerializer(UserCreateSerializer):
 
     class Meta:
-        model = ModUser
+        model = UserModel
         fields = UserCreateSerializer.Meta.fields + (
             'email',
             'username',
