@@ -1,6 +1,7 @@
 from django.urls import include, path
 from rest_framework import routers
 
+
 from api.views import (FollowListViewSet, IngredientsViewSet, RecipesViewSet,
                        SubscribeViewSet, TagsViewSet, UserLoginViewSet,
                        UserLogoutViewSet, UserViewSet)
@@ -61,4 +62,5 @@ router.register(
 urlpatterns = [
     path('auth/', include('djoser.urls.authtoken')),
     path('', include(router.urls)),
+    path('users/me/', UserViewSet.as_view({'get': 'me'}), name='current_user'),
 ]
