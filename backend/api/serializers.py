@@ -12,7 +12,7 @@ from recipes.models import (Ingredient, IngredientsRecipe, Recipe, Tag)
 
 User = get_user_model()
 
-RecipeFollowSerializer
+
 class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
