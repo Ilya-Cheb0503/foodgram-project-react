@@ -11,7 +11,7 @@ router_auth = routers.DefaultRouter()
 router = routers.DefaultRouter()
 
 router_auth.register(
-    'token/login/',
+    'token/login',
     UserLoginViewSet,
     basename='login'
     )
