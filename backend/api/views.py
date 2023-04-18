@@ -13,7 +13,7 @@ from rest_framework.response import Response
 
 from api.serializers import (ChangePasswordSerializer, FollowSerializer,
                              IngredientSerializer, RecipeFollowSerializer,
-                             RecipeGetSerializer, RecipesSerializer,
+                             RecipeGetSerializer, RecipeSerializer,
                              TagSerializer, UserLoginSerializer,
                              UserSerializer
                              )
