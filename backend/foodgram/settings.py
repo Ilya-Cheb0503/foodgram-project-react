@@ -16,6 +16,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '127.0.0.1',
     '130.193.48.111',
+    'backend',
 ]
 
 INSTALLED_APPS = [
