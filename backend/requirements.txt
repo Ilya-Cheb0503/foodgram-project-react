@@ -26,6 +26,7 @@ packaging==23.0
 Pillow==9.3.0
 pluggy==0.13.1
 py==1.11.0
+python-dotenv==1.0.0
 pycparser==2.21
 PyJWT==2.1.0
 pytest==6.2.4
