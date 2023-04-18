@@ -12,7 +12,7 @@ from recipes.models import (Ingredient, IngredientsRecipe, Recipe, Tag)
 
 User = get_user_model()
 
-
+RecipeFollowSerializer
 class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -120,6 +120,10 @@ class FollowRecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = ('__all__')
+
+
+class RecipeFollowSerializer(serializers.ModelSerializer):
+    image = Base64ImageField()
 
 
 class FollowSerializer(serializers.ModelSerializer):
