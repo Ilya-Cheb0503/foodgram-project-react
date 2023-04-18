@@ -122,7 +122,7 @@ class UserLoginViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin,):
         password = serializer.validated_data.get('password')
         email = serializer.validated_data.get('email')
 
-        if not UserModel.objects.filter(email=email).exists():
+        if UserModel.objects.filter(email=email).exists():
             message = "This email has already been taken"
             return Response(
                 data=message,
