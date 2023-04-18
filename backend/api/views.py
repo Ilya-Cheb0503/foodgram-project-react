@@ -160,7 +160,7 @@ class UserLogoutViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin,):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class TagViewSet(viewsets.ReadOnlyModelViewSet):
+class TagsViewSet(viewsets.ReadOnlyModelViewSet):
 
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
