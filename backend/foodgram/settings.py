@@ -136,10 +136,4 @@ DJOSER = {
         'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly'],
         'user_list': ['rest_framework.permissions.AllowAny'],
     },
-
-    'SERIALIZERS': {
-        'user': 'api.serializers.UserCustomSerializer',
-        'user_create': 'api.serializers.UserCustomSerializer',
-    },
-
 }
