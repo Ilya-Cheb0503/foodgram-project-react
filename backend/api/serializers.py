@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from django.db import transaction
 from drf_extra_fields.fields import Base64ImageField
-
+from djoser.serializers import UserCreateSerializer, UserSerializer
 
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
@@ -37,7 +37,7 @@ class IngredientSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'unit_of_measure')
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserCustomSerializer(serializers.ModelSerializer):
 
     password = serializers.CharField(
         write_only=True
@@ -69,6 +69,19 @@ class UserSerializer(serializers.ModelSerializer):
 
         else:
             return data
+
+
+class UserCustomCreateSerializer(UserCreateSerializer):
+
+    class Meta:
+        model = User
+        fields = UserCreateSerializer.Meta.fields + (
+            'email',
+            'username',
+            'first_name',
+            'last_name',
+            'password',
+        )
 
 
 class UserLoginSerializer(serializers.Serializer):
