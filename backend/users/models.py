@@ -3,7 +3,7 @@ from django.core.validators import RegexValidator
 from django.db import models
 
 
-class User(AbstractUser):
+class ModUser(AbstractUser):
 
     username = models.CharField(
         verbose_name='Никнейм',
@@ -41,14 +41,14 @@ class User(AbstractUser):
 class Follow(models.Model):
 
     user = models.ForeignKey(
-        User,
+        ModUser,
         on_delete=models.CASCADE,
         related_name='follower',
         verbose_name='Подписчик'
     )
 
     author = models.ForeignKey(
-        User,
+        ModUser,
         on_delete=models.CASCADE,
         related_name='following',
         verbose_name='Автор'

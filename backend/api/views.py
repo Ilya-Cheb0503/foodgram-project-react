@@ -23,12 +23,12 @@ from recipes.models import (Favorite, Ingredient,
                             Recipe, ShoppingList, Tag)
 from users.models import Follow
 
-User = get_user_model()
+ModUser = get_user_model()
 
 
 class UserViewSet(viewsets.ModelViewSet):
 
-    queryset = User.objects.all()
+    queryset = ModUser.objects.all()
     serializer_class = UserSerializer
     pagination_class = LimitOffsetPagination
     permission_classes = (AllowAny,)
@@ -69,7 +69,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
 
-        user = get_object_or_404(User, pk=kwargs.get('id'))
+        user = get_object_or_404(ModUser, pk=kwargs.get('id'))
         serializer = self.get_serializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -86,7 +86,7 @@ class SubscribeViewSet(viewsets.GenericViewSet,
         serializer.save(
             user=self.request.user,
             author=get_object_or_404(
-                User, pk=self.kwargs.get('id')
+                ModUser, pk=self.kwargs.get('id')
             )
         )
 
@@ -96,7 +96,7 @@ class SubscribeViewSet(viewsets.GenericViewSet,
             Follow,
             user=self.request.user,
             author=get_object_or_404(
-                User, pk=self.kwargs.get('id')
+                ModUser, pk=self.kwargs.get('id')
             )
         )
         follow.delete()
@@ -122,14 +122,14 @@ class UserLoginViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin,):
         password = serializer.validated_data.get('password')
         email = serializer.validated_data.get('email')
 
-        if not User.objects.filter(email=email).exists():
+        if not ModUser.objects.filter(email=email).exists():
             message = "This email has already been taken"
             return Response(
                 data=message,
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        user = get_object_or_404(User, email=email)
+        user = get_object_or_404(ModUser, email=email)
         if not check_password(password, user.password):
             message = "password is incorrect"
             return Response(

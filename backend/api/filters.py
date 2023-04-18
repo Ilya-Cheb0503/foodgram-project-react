@@ -2,7 +2,7 @@ import django_filters
 from django.contrib.auth import get_user_model
 from recipes.models import Ingredient, Recipe, Tag
 
-UserModel = get_user_model()
+ModUser = get_user_model()
 
 
 class IngredientFilter(django_filters.FilterSet):
@@ -26,7 +26,7 @@ class RecipeFilter(django_filters.FilterSet):
         )
 
     author = django_filters.ModelChoiceFilter(
-        queryset=UserModel.objects.all()
+        queryset=ModUser.objects.all()
         )
 
     class Meta:
