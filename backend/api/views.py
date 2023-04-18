@@ -198,7 +198,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
         if self.request.method == 'GET':
             return RecipeGetSerializer
-        return RecipesSerializer
+        return RecipeSerializer
 
     def get_queryset(self):
 
@@ -305,7 +305,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         data = StringIO()
         for i in ingredients_dict:
             ingredient = Ingredient.objects.get(id=i)
-            text = f'{ingredient.name} ({ingredient.measurement_unit}) —'
+            text = f'{ingredient.name} ({ingredient.unit_of_measure}) —'
             text += f' {ingredients_dict[i]} \n'
             data.write(text)
 

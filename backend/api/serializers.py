@@ -180,8 +180,6 @@ class FollowSerializer(serializers.ModelSerializer):
 
         author_id = self.context.get('id')
         user_id = self.context.get('request').user.id
-        # print(author_id)  Для чего принтовать ??
-        # print(user_id)
 
         if user_id == author_id:
             raise serializers.ValidationError(
