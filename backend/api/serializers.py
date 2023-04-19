@@ -111,6 +111,10 @@ class FollowRecipeSerializer(serializers.ModelSerializer):
 class RecipeFollowSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
 
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'image', 'cooking_time')
+
 
 class FollowSerializer(serializers.ModelSerializer):
 
