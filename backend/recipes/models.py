@@ -152,14 +152,14 @@ class ShoppingList(models.Model):
     user = models.ForeignKey(
         UserModel,
         on_delete=models.CASCADE,
-        related_name='list',
+        related_name='cart',
         verbose_name='Составитель списка покупок'
     )
 
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='list',
+        related_name='cart',
         verbose_name='Список покупок'
     )
 
