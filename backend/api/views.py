@@ -1,7 +1,8 @@
-from io import StringIO
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
-from django.shortcuts import get_object_or_404, get_list_or_404
+from django.db.models import Sum
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins, permissions, status, viewsets
 from rest_framework.authtoken.models import Token
@@ -281,35 +282,32 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=('GET',), )
     def download_shopping_cart(self, request):
-
-        user = request.user
-        shop_list = get_list_or_404(
-            IngredientsRecipe.objects.filter(recipe__cart__user=user))
-
-        ingredients = []
-        for i in shop_list:
-            ingredients.extend(
-                i.recipe.amount.all()
+        if not request.user.cart.exists():
+            return Response(
+                'В корзине пока что нет продуктов',
+                status=status.HTTP_400_BAD_REQUEST)
+        ingredients = (
+            IngredientsRecipe.objects
+            .filter(recipe__cart__user=request.user)
+            .values('ingredient')
+            .annotate(total_amount=Sum('amount'))
+            .values_list(
+                'ingredient__name',
+                'total_amount',
+                'ingredient__measurement_unit'
             )
+        )
 
-        ingredients_dict = {}
-        for i in ingredients:
-            if i.ingredient_id not in ingredients_dict:
-                ingredients_dict[i.ingredient_id] = 0
-            ingredients_dict[i.ingredient_id] += i.amount
+        text = ''
+        for ingredient in ingredients:
+            text += '{}  ({} {}) \n'.format(*ingredient)
 
-        data = StringIO()
-        for i in ingredients_dict:
-            ingredient = Ingredient.objects.get(id=i)
-            text = f'{ingredient.name} ({ingredient.measurement_unit}) —'
-            text += f' {ingredients_dict[i]} \n'
-            data.write(text)
+        file = HttpResponse(
+            f'Необходимые продукты:\n {text}', content_type='text/plain'
+        )
 
-        data.seek(0)
-        headers = {
-            'Content-Disposition': 'attachment; filename="list.txt"',
-        }
-        return Response(data, status=status.HTTP_200_OK, headers=headers)
+        file['Content-Disposition'] = ('attachment; filename=cart.txt')
+        return file
 
 
 class FollowListViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
