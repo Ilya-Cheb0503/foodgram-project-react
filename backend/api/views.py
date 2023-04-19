@@ -289,7 +289,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         ingredients = []
         for i in shop_list:
             ingredients.extend(
-                i.recipe.ingredients_in_recipe.all()
+                i.recipe.amount.all()
             )
 
         ingredients_dict = {}
