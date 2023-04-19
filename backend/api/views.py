@@ -19,7 +19,7 @@ from api.serializers import (ChangePasswordSerializer, FollowSerializer,
                              )
 from api.filters import IngredientFilter, RecipeFilter
 from api.paginators import PageLimitPagination
-from recipes.models import (Favorite, Ingredient,
+from recipes.models import (Favorite, Ingredient, IngredientsRecipe,
                             Recipe, ShoppingList, Tag)
 from users.models import Follow
 
@@ -284,11 +284,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
         user = request.user
         shop_list = get_list_or_404(
-            ShoppingList.objects.select_related('recipe').prefetch_related(
-                'ingredients_in_recipe'
-            ),
-            user=user
-        )
+            IngredientsRecipe.objects.filter(recipe__cart__user=user))
 
         ingredients = []
         for i in shop_list:
