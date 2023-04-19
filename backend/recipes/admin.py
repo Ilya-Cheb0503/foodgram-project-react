@@ -11,7 +11,7 @@ class IngredientAdmin(admin.ModelAdmin):
 
     list_display = (
         'name',
-        'unit_of_measure',
+        'measurement_unit',
     )
 
     search_fields = (

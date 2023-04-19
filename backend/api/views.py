@@ -249,7 +249,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         )
 
     @action(detail=True, methods=('POST', 'DELETE'), )
-    def shopping_list(self, request, pk):
+    def shopping_cart(self, request, pk):
 
         if request.method == 'POST':
             recipe = get_object_or_404(Recipe, pk=pk)
@@ -280,7 +280,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         )
 
     @action(detail=False, methods=('GET',), )
-    def download_shopping_list(request):
+    def download_shopping_cart(request):
 
         user = request.user
         shop_list = get_list_or_404(
@@ -305,7 +305,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         data = StringIO()
         for i in ingredients_dict:
             ingredient = Ingredient.objects.get(id=i)
-            text = f'{ingredient.name} ({ingredient.unit_of_measure}) —'
+            text = f'{ingredient.name} ({ingredient.measurement_unit}) —'
             text += f' {ingredients_dict[i]} \n'
             data.write(text)
 

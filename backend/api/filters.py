@@ -14,7 +14,7 @@ class IngredientFilter(django_filters.FilterSet):
 
     class Meta:
         model = Ingredient
-        fields = ('name', 'unit_of_measure')
+        fields = ('name', 'measurement_unit')
 
 
 class RecipeFilter(django_filters.FilterSet):

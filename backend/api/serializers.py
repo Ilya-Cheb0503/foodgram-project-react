@@ -33,7 +33,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ingredient
-        fields = ('id', 'name', 'unit_of_measure')
+        fields = ('id', 'name', 'measurement_unit')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -241,13 +241,13 @@ class IngredientsRecipeGetSerializer(serializers.ModelSerializer):
         source='ingredient.name'
         )
 
-    unit_of_measure = serializers.ReadOnlyField(
-        source='ingredient.unit_of_measure'
+    measurement_unit = serializers.ReadOnlyField(
+        source='ingredient.measurement_unit'
     )
 
     class Meta:
         model = IngredientsRecipe
-        fields = ('id', 'name', 'unit_of_measure', 'amount')
+        fields = ('id', 'name', 'measurement_unit', 'amount')
         validators = (
             UniqueTogetherValidator(
                 queryset=IngredientsRecipe.objects.all(),
