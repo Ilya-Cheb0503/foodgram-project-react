@@ -285,7 +285,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         user = request.user
         shop_list = get_list_or_404(
             ShoppingList.objects.select_related('recipe').prefetch_related(
-                'recipe__ingredients_in_recipe'
+                'ingredients_in_recipe'
             ),
             user=user
         )
