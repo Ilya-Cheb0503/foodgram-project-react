@@ -280,7 +280,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         )
 
     @action(detail=False, methods=('GET',), )
-    def download_shopping_cart(request):
+    def download_shopping_cart(self, request):
 
         user = request.user
         shop_list = get_list_or_404(
