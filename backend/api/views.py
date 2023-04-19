@@ -286,7 +286,8 @@ class RecipesViewSet(viewsets.ModelViewSet):
             return Response(
                 'В корзине пока что нет продуктов',
                 status=status.HTTP_400_BAD_REQUEST)
-        ingredients = (
+
+        ingredients_list = (
             IngredientsRecipe.objects
             .filter(recipe__cart__user=request.user)
             .values('ingredient')
@@ -296,10 +297,10 @@ class RecipesViewSet(viewsets.ModelViewSet):
                 'total_amount',
                 'ingredient__measurement_unit'
             )
-        )
+            )
 
         text = ''
-        for ingredient in ingredients:
+        for ingredient in ingredients_list:
             text += '{}  ({} {}) \n'.format(*ingredient)
 
         file = HttpResponse(
