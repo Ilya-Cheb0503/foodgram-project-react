@@ -218,8 +218,8 @@ class RecipeGetSerializer(serializers.ModelSerializer):
 
     def get_ingredients(self, obj):
 
-        recipe_ingredients = IngredientsRecipe.objects.filter(recipe=obj)
-        return IngredientsRecipeGetSerializer(recipe_ingredients,
+        ingredients_recipes = IngredientsRecipe.objects.filter(recipe=obj)
+        return IngredientsRecipeGetSerializer(ingredients_recipes,
                                               many=True).data
 
 
