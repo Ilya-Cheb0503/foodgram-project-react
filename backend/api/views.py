@@ -294,7 +294,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
             .annotate(total_amount=Sum('amount'))
             .values_list(
                 'ingredient__name',
-                'total_amount',
+                'total__amount',
                 'ingredient__measurement_unit'
             )
             )
