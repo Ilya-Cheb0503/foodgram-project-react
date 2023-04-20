@@ -16,7 +16,7 @@ from api.serializers import (ChangePasswordSerializer, FollowSerializer,
                              IngredientSerializer, RecipeFollowSerializer,
                              RecipeGetSerializer, RecipeSerializer,
                              TagSerializer, UserLoginSerializer,
-                             UserSerializer, FollowRecipeSerializer
+                             UserSerializer,
                              )
 from api.filters import IngredientFilter, RecipeFilter
 from api.paginators import PageLimitPagination

@@ -96,18 +96,6 @@ class ChangePasswordSerializer(serializers.Serializer):
         )
 
 
-class FollowRecipeSerializer(serializers.ModelSerializer):
-
-    author = serializers.SlugRelatedField(
-        read_only=True,
-        slug_field='username',
-        )
-
-    class Meta:
-        model = Recipe
-        fields = ('__all__')
-
-
 class RecipeFollowSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
 
