@@ -317,8 +317,8 @@ class RecipesViewSet(viewsets.ModelViewSet):
         #     )
 
         text = ''
-        for ingredient in shop_list:
-            text += '{}  ({} {}) \n'.format(*ingredient)
+        for key, value in shop_list.items():
+            text += f'\n{key} ({value[1]}) - {str(value[0])}'
 
         file = HttpResponse(
             f'Необходимые продукты:\n {text}', content_type='text/plain'
