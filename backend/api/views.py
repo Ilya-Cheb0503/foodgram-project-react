@@ -299,16 +299,20 @@ class RecipesViewSet(viewsets.ModelViewSet):
             )
             )
 
-        text = ''
-        for ingredient in ingredients_list:
-            text += '{}  ({} {}) \n'.format(*ingredient)
+        # text = ''
+        # for ingredient in ingredients_list:
+        #     text += '{}  ({} {}) \n'.format(*ingredient)
 
-        file = HttpResponse(
-            f'Необходимые продукты:\n {text}', content_type='text/plain'
+        # file = HttpResponse(
+        #     f'Необходимые продукты:\n {text}', content_type='text/plain'
+        # )
+
+        # file['Content-Disposition'] = ('attachment; filename=cart.txt')
+        # return file
+        return Response(
+            {'errors': ingredients_list},
+            status=status.HTTP_400_BAD_REQUEST
         )
-
-        file['Content-Disposition'] = ('attachment; filename=cart.txt')
-        return file
 
 
 class FollowListViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
