@@ -28,7 +28,7 @@ def script_db():
         )) as conn:
             with conn.cursor() as cursor:
                 with open(
-                    './data/ingredients.json',
+                    '../data/ingredients.json',
                     mode='r',
                     encoding='utf8',
                 ) as json_file:
