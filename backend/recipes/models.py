@@ -136,10 +136,10 @@ class IngredientsRecipe(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['ingredient', 'recipe'],
-                name='unique_ingredients_recipe'
+                name='unique_ingredient_recipe'
             )
         ]
-        db_table = 'recipes_ingredients_recipe'
+        db_table = 'recipes_ingredient_recipe'
 
     def __str__(self):
         return self.ingredient.name
