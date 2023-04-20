@@ -282,26 +282,42 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=('GET',), )
     def download_shopping_cart(self, request):
-        if not request.user.cart.exists():
-            return Response(
-                'В корзине пока что нет продуктов',
-                status=status.HTTP_400_BAD_REQUEST)
+        user = get_object_or_404(UserModel, username=request.user)
+        recipes_id = ShoppingList.objects.filter(user=user).values('recipe')
+        recipes = Recipe.objects.filter(pk__in=recipes_id)
+        shop_dict = {}
+        n_rec = 0
+        for recipe in recipes:
+            n_rec += 1
+            ing_amounts = IngredientsRecipe.objects.filter(recipe=recipe)
+            for ing in ing_amounts:
+                if ing.ingredient.name in shop_dict:
+                    shop_dict[ing.ingredient.name][0] += ing.amount
+                else:
+                    shop_dict[ing.ingredient.name] = [
+                        ing.amount,
+                        ing.ingredient.measurement_unit
+                    ]
+        # if not request.user.cart.exists():
+        #     return Response(
+        #         'В корзине пока что нет продуктов',
+        #         status=status.HTTP_400_BAD_REQUEST)
 
-        ingredients_list = (
-            IngredientsRecipe.objects
-            .filter(recipe__cart__user=request.user)
-            .values('ingredient')
-            .annotate(total_amount=Sum('amount'))
-            .values_list(
-                'ingredient__name',
-                'total_amount',
-                'ingredient__measurement_unit'
-            )
-            )
+        # ingredients_list = (
+        #     IngredientsRecipe.objects
+        #     .filter(recipe__cart__user=request.user)
+        #     .values('ingredient')
+        #     .annotate(total_amount=Sum('amount'))
+        #     .values_list(
+        #         'ingredient__name',
+        #         'total_amount',
+        #         'ingredient__measurement_unit'
+        #     )
+        #     )
 
-        text = ''
-        for ingredient in ingredients_list:
-            text += '{}  ({} {}) \n'.format(*ingredient)
+        # text = ''
+        # for ingredient in ingredients_list:
+        #     text += '{}  ({} {}) \n'.format(*ingredient)
 
         # file = HttpResponse(
         #     f'Необходимые продукты:\n {text}', content_type='text/plain'
@@ -310,7 +326,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         # file['Content-Disposition'] = ('attachment; filename=cart.txt')
         # return file
         return Response(
-            {'errors': ingredients_list},
+            {'errors': shop_dict.items()},
             status=status.HTTP_400_BAD_REQUEST
         )
 
