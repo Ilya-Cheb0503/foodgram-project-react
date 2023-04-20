@@ -189,8 +189,8 @@ class FollowSerializer(serializers.ModelSerializer):
 class RecipeGetSerializer(serializers.ModelSerializer):
 
     image = Base64ImageField(
-        max_length=None,
-        use_url=True
+        # max_length=None,
+        # use_url=True
         )
 
     ingredients = serializers.SerializerMethodField()
@@ -295,8 +295,9 @@ class RecipeSerializer(serializers.ModelSerializer):
     )
 
     image = Base64ImageField(
-        max_length=None,
-        use_url=True)
+        # max_length=None,
+        # use_url=True
+        )
 
     cooking_time = serializers.IntegerField(
         min_value=1
