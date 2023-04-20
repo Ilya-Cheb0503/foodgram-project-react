@@ -16,7 +16,7 @@ from api.serializers import (ChangePasswordSerializer, FollowSerializer,
                              IngredientSerializer, RecipeFollowSerializer,
                              RecipeGetSerializer, RecipeSerializer,
                              TagSerializer, UserLoginSerializer,
-                             UserSerializer
+                             UserSerializer, FollowRecipeSerializer
                              )
 from api.filters import IngredientFilter, RecipeFilter
 from api.paginators import PageLimitPagination
@@ -232,7 +232,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST,
                     )
             Favorite.objects.get_or_create(user=request.user, recipe=recipe)
-            data = RecipeFollowSerializer(recipe).data
+            data = FollowRecipeSerializer(recipe).data
             return Response(data, status=status.HTTP_201_CREATED)
         recipe = get_object_or_404(Recipe, pk=pk)
 
@@ -262,7 +262,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
                 )
             (ShoppingList.objects.get_or_create(
                 user=request.user, recipe=recipe))
-            data = RecipeFollowSerializer(recipe).data
+            data = FollowRecipeSerializer(recipe).data
             return Response(data, status=status.HTTP_201_CREATED)
         recipe = get_object_or_404(Recipe, pk=pk)
 
