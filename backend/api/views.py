@@ -232,7 +232,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST,
                     )
             Favorite.objects.get_or_create(user=request.user, recipe=recipe)
-            data = FollowRecipeSerializer(recipe).data
+            data = RecipeFollowSerializer(recipe).data
             return Response(data, status=status.HTTP_201_CREATED)
         recipe = get_object_or_404(Recipe, pk=pk)
 
@@ -262,7 +262,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
                 )
             (ShoppingList.objects.get_or_create(
                 user=request.user, recipe=recipe))
-            data = FollowRecipeSerializer(recipe).data
+            data = RecipeFollowSerializer(recipe).data
             return Response(data, status=status.HTTP_201_CREATED)
         recipe = get_object_or_404(Recipe, pk=pk)
 

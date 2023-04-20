@@ -164,7 +164,7 @@ class FollowSerializer(serializers.ModelSerializer):
         queryset = obj.author.recipes.all()
         if limit:
             queryset = queryset[:int(limit)]
-        return FollowRecipeSerializer(queryset, many=True).data
+        return RecipeFollowSerializer(queryset, many=True).data
 
     def validate(self, data):
 
@@ -189,8 +189,8 @@ class FollowSerializer(serializers.ModelSerializer):
 class RecipeGetSerializer(serializers.ModelSerializer):
 
     image = Base64ImageField(
-        # max_length=None,
-        # use_url=True
+        max_length=None,
+        use_url=True
         )
 
     ingredients = serializers.SerializerMethodField()
@@ -295,8 +295,8 @@ class RecipeSerializer(serializers.ModelSerializer):
     )
 
     image = Base64ImageField(
-        # max_length=None,
-        # use_url=True
+        max_length=None,
+        use_url=True
         )
 
     cooking_time = serializers.IntegerField(
