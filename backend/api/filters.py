@@ -23,11 +23,11 @@ class RecipeFilter(django_filters.FilterSet):
         field_name='tags__slug',
         to_field_name='slug',
         queryset=Tag.objects.all(),
-        )
+    )
 
     author = django_filters.ModelChoiceFilter(
         queryset=UserModel.objects.all()
-        )
+    )
 
     class Meta:
         model = Recipe

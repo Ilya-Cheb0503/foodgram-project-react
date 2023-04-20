@@ -40,7 +40,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     password = serializers.CharField(
         write_only=True
-        )
+    )
 
     is_subscribed = serializers.SerializerMethodField()
 
@@ -75,12 +75,12 @@ class UserLoginSerializer(serializers.Serializer):
     password = serializers.CharField(
         required=True,
         max_length=128
-        )
+    )
 
     email = serializers.CharField(
         required=True,
         max_length=254
-        )
+    )
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -88,12 +88,12 @@ class ChangePasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(
         required=True,
         max_length=128
-        )
+    )
 
     current_password = serializers.CharField(
         required=True,
         max_length=128
-        )
+    )
 
 
 class RecipeFollowSerializer(serializers.ModelSerializer):
@@ -108,30 +108,30 @@ class FollowSerializer(serializers.ModelSerializer):
 
     id = serializers.ReadOnlyField(
         source='author.id'
-        )
+    )
 
     email = serializers.ReadOnlyField(
         source='author.email'
-        )
+    )
 
     username = serializers.ReadOnlyField(
         source='author.username'
-        )
+    )
 
     first_name = serializers.ReadOnlyField(
         source='author.first_name'
-        )
+    )
 
     last_name = serializers.ReadOnlyField(
         source='author.last_name'
-        )
+    )
 
     is_subscribed = serializers.SerializerMethodField()
     recipes = serializers.SerializerMethodField()
 
     recipes_count = serializers.ReadOnlyField(
         source='author.recipes.count'
-        )
+    )
 
     class Meta:
         model = Follow
@@ -179,18 +179,18 @@ class RecipeGetSerializer(serializers.ModelSerializer):
     image = Base64ImageField(
         max_length=None,
         use_url=True
-        )
+    )
 
     ingredients = serializers.SerializerMethodField()
 
     author = UserSerializer(
         read_only=True
-        )
+    )
 
     tags = TagSerializer(
         many=True,
         read_only=True
-        )
+    )
 
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
@@ -227,11 +227,11 @@ class IngredientsRecipeGetSerializer(serializers.ModelSerializer):
 
     id = serializers.ReadOnlyField(
         source='ingredient.id'
-        )
+    )
 
     name = serializers.ReadOnlyField(
         source='ingredient.name'
-        )
+    )
 
     measurement_unit = serializers.ReadOnlyField(
         source='ingredient.measurement_unit'
@@ -252,11 +252,11 @@ class IngredientsRecipeSerializer(serializers.ModelSerializer):
 
     recipe = serializers.PrimaryKeyRelatedField(
         read_only=True
-        )
+    )
 
     amount = serializers.IntegerField(
         write_only=True
-        )
+    )
 
     id = serializers.PrimaryKeyRelatedField(
         source='ingredient',
@@ -272,7 +272,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     ingredients = IngredientsRecipeSerializer(
         many=True
-        )
+    )
 
     author = UserSerializer(
         read_only=True)
@@ -285,11 +285,11 @@ class RecipeSerializer(serializers.ModelSerializer):
     image = Base64ImageField(
         max_length=None,
         use_url=True
-        )
+    )
 
     cooking_time = serializers.IntegerField(
         min_value=1
-        )
+    )
 
     class Meta:
         model = Recipe

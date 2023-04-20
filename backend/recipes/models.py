@@ -11,13 +11,13 @@ class Tag(models.Model):  # создаются лишь админом
         verbose_name='Название',
         max_length=100,
         unique=True
-        )
+    )
 
     color = models.CharField(
         verbose_name='Цвет',
         max_length=7,
         unique=True
-        )
+    )
 
     slug = models.SlugField(
         verbose_name='Слаг',
@@ -38,12 +38,12 @@ class Ingredient(models.Model):
     name = models.CharField(
         verbose_name='Название',
         max_length=100
-        )
+    )
 
     measurement_unit = models.CharField(
         verbose_name='Единицы Измерения',
         max_length=50
-        )
+    )
 
     class Meta:
         verbose_name = 'Ингридиент'
@@ -60,33 +60,33 @@ class Recipe(models.Model):
         on_delete=models.CASCADE,
         related_name='recipes',
         verbose_name='Автор рецепта',
-        )
+    )
 
     ingredients = models.ManyToManyField(
         Ingredient,
         related_name='recipes',
         verbose_name='Ингредиенты',
-        )
+    )
 
     tags = models.ManyToManyField(
         Tag,
         related_name='tags',
         verbose_name='Тег',
-        )
+    )
 
     image = models.FileField(
         verbose_name='Картинка',
         upload_to='recipe_img/',
-        )
+    )
 
     name = models.CharField(
         verbose_name='Название',
         max_length=200
-        )
+    )
 
     text = models.TextField(
         verbose_name='Описание'
-        )
+    )
 
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время приготовления, мин',

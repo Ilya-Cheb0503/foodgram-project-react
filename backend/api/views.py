@@ -229,7 +229,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
                 return Response(
                     {'errors': 'Рецепт уже находится в списке "Избранное".'},
                     status=status.HTTP_400_BAD_REQUEST,
-                    )
+                )
             Favorite.objects.get_or_create(user=request.user, recipe=recipe)
             data = RecipeFollowSerializer(recipe).data
             return Response(data, status=status.HTTP_201_CREATED)

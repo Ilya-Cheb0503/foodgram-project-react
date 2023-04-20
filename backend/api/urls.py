@@ -15,31 +15,31 @@ router_auth.register(
     'token/login',
     UserLoginViewSet,
     basename='login'
-    )
+)
 
 router_auth.register(
     'token/logout',
     UserLogoutViewSet,
     basename='logout'
-    )
+)
 
 router.register(
     'tags',
     TagsViewSet,
     basename='tags'
-    )
+)
 
 router.register(
     'ingredients',
     IngredientsViewSet,
     basename='ingredients'
-    )
+)
 
 router.register(
     'recipes',
     RecipesViewSet,
     basename='recipes'
-    )
+)
 
 router.register(
     'users/subscriptions',
@@ -57,7 +57,7 @@ router.register(
     'users',
     UserViewSet,
     basename='users'
-    )
+)
 
 urlpatterns = [
     # path('auth/', include(router_auth.urls)),
