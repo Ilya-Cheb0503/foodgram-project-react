@@ -291,10 +291,10 @@ class RecipesViewSet(viewsets.ModelViewSet):
             IngredientsRecipe.objects
             .filter(recipe__cart__user=request.user)
             .values('ingredient')
-            .annotate(total_amount=Sum('amount'))
+            .annotate(total_amount=Sum('ingredients_recipes'))
             .values_list(
                 'ingredient__name',
-                'total__amount',
+                'total_amount',
                 'ingredient__measurement_unit'
             )
             )
