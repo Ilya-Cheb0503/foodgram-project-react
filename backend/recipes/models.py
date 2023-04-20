@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator
+from django.core import validators
 from django.db import models
 
 UserModel = get_user_model()
@@ -90,7 +90,7 @@ class Recipe(models.Model):
 
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время приготовления, мин',
-        validators=(MinValueValidator(1),)
+        validators=(validators.MinValueValidator(1),)
     )
 
     class Meta:
@@ -126,8 +126,11 @@ class IngredientsRecipe(models.Model):
 
     amount = models.PositiveSmallIntegerField(
         verbose_name='Количество',
-        validators=(MinValueValidator(1),)
+        validators=(MinValueValidator(1,),)
     )
+    validators=(validators.MinValueValidator(
+            1, message='Минимальное количество ингредиентов 1'),
+        )
 
     class Meta:
         ordering = ('-id', )
