@@ -126,11 +126,8 @@ class IngredientsRecipe(models.Model):
 
     amount = models.PositiveSmallIntegerField(
         verbose_name='Количество',
-        validators=(MinValueValidator(1,),)
+        validators=(validators.MinValueValidator(1,),)
     )
-    validators=(validators.MinValueValidator(
-            1, message='Минимальное количество ингредиентов 1'),
-        )
 
     class Meta:
         ordering = ('-id', )
