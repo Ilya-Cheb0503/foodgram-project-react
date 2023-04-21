@@ -102,7 +102,7 @@ class SubscribeViewSet(viewsets.GenericViewSet,
             author=author
         )
 
-        if follow.s:
+        if follow.exist():
             follow.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
