@@ -365,5 +365,5 @@ class FollowListViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return Follow.objects.filter(user=self.request.user)
+        # return Follow.objects.filter(user=self.request.user)
         return UserModel.follow_set.all()
