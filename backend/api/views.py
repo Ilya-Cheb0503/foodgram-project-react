@@ -102,7 +102,7 @@ class SubscribeViewSet(viewsets.GenericViewSet,
             author=author
         )
 
-        if follow.exist():
+        if follow.s:
             follow.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -242,7 +242,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
                 recipe=recipe
             )
 
-            if favorite.exist():
+            if favorite.exists():
                 return Response(
                     {'errors': 'Рецепт уже находится в списке "Избранное".'},
                     status=status.HTTP_400_BAD_REQUEST,
@@ -265,7 +265,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
             recipe=recipe
         )
 
-        if favorite.exist():
+        if favorite.exists():
             favorite.delete()
             return Response(
                 'Рецепт успешно удален из списка "Избранное".',
@@ -292,7 +292,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
                 recipe=recipe
             )
 
-            if shop_list.exist():
+            if shop_list.s:
                 return Response(
                     {'errors': 'Рецепт уже находится в списке покупок.'},
                     status=status.HTTP_400_BAD_REQUEST,
@@ -316,7 +316,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
             recipe=recipe
         )
 
-        if follow.exist():
+        if follow.exists():
             follow.delete()
             return Response(
                 'Рецепт успешно удален из списка "Избранное".',
