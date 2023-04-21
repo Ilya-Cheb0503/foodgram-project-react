@@ -33,6 +33,10 @@ class TagAdmin(admin.ModelAdmin):
     )
 
 
+class RecipeIngredientInline(admin.StackedInline):
+    min_num = 1
+
+
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
 
@@ -51,6 +55,7 @@ class RecipeAdmin(admin.ModelAdmin):
         'tags'
     )
 
+    inlines = [RecipeIngredientInline]
     readonly_fields = ('count_favorite',)
 
     def view_text(self, obj):

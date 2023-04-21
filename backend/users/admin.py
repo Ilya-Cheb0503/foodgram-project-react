@@ -35,4 +35,3 @@ class FollowAdmin(admin.ModelAdmin):
     search_fields = (
         'user',
     )
-

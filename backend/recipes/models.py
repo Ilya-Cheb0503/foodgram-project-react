@@ -1,11 +1,11 @@
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 UserModel = get_user_model()
 
 
-class Tag(models.Model):  # создаются лишь админом
+class Tag(models.Model):
 
     name = models.CharField(
         verbose_name='Название',
@@ -26,6 +26,7 @@ class Tag(models.Model):  # создаются лишь админом
     )
 
     class Meta:
+        ordering = ['-id']
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
@@ -46,6 +47,7 @@ class Ingredient(models.Model):
     )
 
     class Meta:
+        ordering = ['name']
         verbose_name = 'Ингридиент'
         verbose_name_plural = 'Ингридиенты'
 
@@ -90,11 +92,14 @@ class Recipe(models.Model):
 
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время приготовления, мин',
-        validators=(MinValueValidator(1),)
+        validators=(
+            MinValueValidator(1),
+            MaxValueValidator(300),
+        )
     )
 
     class Meta:
-        ordering = ('-id', )
+        ordering = ['-id']
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
         constraints = [
@@ -126,11 +131,14 @@ class IngredientsRecipe(models.Model):
 
     amount = models.PositiveSmallIntegerField(
         verbose_name='Количество',
-        validators=(MinValueValidator(1),)
+        validators=(
+            MinValueValidator(1),
+            MaxValueValidator(300),
+        )
     )
 
     class Meta:
-        ordering = ('-id', )
+        ordering = ['name']
         verbose_name = 'Количество ингредиента'
         verbose_name_plural = 'Количество ингредиентов'
         constraints = [
@@ -162,7 +170,7 @@ class ShoppingList(models.Model):
     )
 
     class Meta:
-        ordering = ['id']
+        ordering = ['-id']
         verbose_name = 'Список покупок'
         verbose_name_plural = 'Списки покупок'
         constraints = [
@@ -194,6 +202,7 @@ class Favorite(models.Model):
     )
 
     class Meta:
+        ordering = ['-id']
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранные рецепты'
         constraints = [

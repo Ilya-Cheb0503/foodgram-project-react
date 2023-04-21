@@ -366,7 +366,4 @@ class FollowListViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
 
     def get_queryset(self):
 
-        user = UserModel.objects.filter(
-            id=self.request.user.id
-        )
-        return user.follower.all()
+        return Follow.objects.filter(user=self.request.user)
