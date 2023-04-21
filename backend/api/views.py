@@ -50,7 +50,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 serializer.validated_data['current_password'],
                 current_user.password
         ):
-            message = "Current Password is incorrect"
+            message = 'Current Password is incorrect'
             return Response(message, status=status.HTTP_401_UNAUTHORIZED)
 
         current_user.set_password(serializer.validated_data['new_password'])
@@ -92,15 +92,19 @@ class SubscribeViewSet(viewsets.GenericViewSet,
 
     def delete(self, request, *args, **kwargs):
 
-        follow = get_object_or_404(
-            Follow,
-            user=self.request.user,
-            author=get_object_or_404(
-                UserModel, pk=self.kwargs.get('id')
-            )
+        author = get_object_or_404(
+            UserModel,
+            pk=self.kwargs.get('id')
         )
-        follow.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+
+        follow = Follow.objects.filter(
+            user=request.user,
+            author=author
+        )
+
+        if follow.exist():
+            follow.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
     def get_serializer_context(self):
 
@@ -123,7 +127,7 @@ class UserLoginViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin,):
         email = serializer.validated_data.get('email')
 
         if UserModel.objects.filter(email=email).exists():
-            message = "This email has already been taken"
+            message = 'This email has already been taken'
             return Response(
                 data=message,
                 status=status.HTTP_400_BAD_REQUEST
@@ -131,7 +135,7 @@ class UserLoginViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin,):
 
         user = get_object_or_404(UserModel, email=email)
         if not check_password(password, user.password):
-            message = "password is incorrect"
+            message = 'password is incorrect'
             return Response(
                 data=message,
                 status=status.HTTP_400_BAD_REQUEST
@@ -140,7 +144,7 @@ class UserLoginViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin,):
         token, _ = Token.objects.get_or_create(user=user)
 
         response = {
-            "auth_token": str(token)
+            'auth_token': str(token)
         }
 
         return Response(
@@ -191,6 +195,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
         instance = self.get_object()
         self.perform_destroy(instance)
+
         return Response('Рецепт успешно удален',
                         status=status.HTTP_204_NO_CONTENT)
 
@@ -203,46 +208,70 @@ class RecipesViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
 
         is_favorited = self.request.query_params.get('is_favorited') or 0
+
         if int(is_favorited) == 1:
             return Recipe.objects.filter(
                 favorites__user=self.request.user
             )
+
         is_in_shopping_cart = self.request.query_params.get(
             'is_in_shopping_cart') or 0
+
         if int(is_in_shopping_cart) == 1:
             return Recipe.objects.filter(
                 cart__user=self.request.user
             )
+
         return Recipe.objects.all()
 
     def perform_create(self, serializer):
-
         serializer.save(author=self.request.user)
 
     @action(detail=True, methods=('POST', 'DELETE'), )
     def favorite(self, request, pk):
 
         if self.request.method == 'POST':
-            recipe = get_object_or_404(Recipe, pk=pk)
-            if (Favorite.objects.filter(user=request.user,
-               recipe=recipe).exists()):
+
+            recipe = get_object_or_404(
+                Recipe,
+                pk=pk
+            )
+
+            favorite = Favorite.objects.filter(
+                user=request.user,
+                recipe=recipe
+            )
+
+            if favorite.exist():
                 return Response(
                     {'errors': 'Рецепт уже находится в списке "Избранное".'},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
-            Favorite.objects.get_or_create(user=request.user, recipe=recipe)
-            data = RecipeFollowSerializer(recipe).data
-            return Response(data, status=status.HTTP_201_CREATED)
-        recipe = get_object_or_404(Recipe, pk=pk)
 
-        if Favorite.objects.filter(user=request.user, recipe=recipe).exists():
-            follow = get_object_or_404(Favorite, user=request.user,
-                                       recipe=recipe)
-            follow.delete()
+            Favorite.objects.get_or_create(
+                user=request.user,
+                recipe=recipe
+            )
+
+            data = RecipeFollowSerializer(recipe).data
+            return Response(
+                data,
+                status=status.HTTP_201_CREATED
+            )
+
+        recipe = get_object_or_404(Recipe, pk=pk)
+        favorite = Favorite.objects.filter(
+            user=request.user,
+            recipe=recipe
+        )
+
+        if favorite.exist():
+            favorite.delete()
             return Response(
                 'Рецепт успешно удален из списка "Избранное".',
                 status=status.HTTP_204_NO_CONTENT
             )
+
         return Response(
             {'errors': 'Данный рецепт отсутствует в списке "Избранное".'},
             status=status.HTTP_400_BAD_REQUEST
@@ -252,28 +281,48 @@ class RecipesViewSet(viewsets.ModelViewSet):
     def shopping_cart(self, request, pk):
 
         if request.method == 'POST':
-            recipe = get_object_or_404(Recipe, pk=pk)
-            if (ShoppingList.objects.filter(
-               user=request.user, recipe=recipe).exists()):
+
+            recipe = get_object_or_404(
+                Recipe,
+                pk=pk
+            )
+
+            shop_list = ShoppingList.objects.filter(
+                user=request.user,
+                recipe=recipe
+            )
+
+            if shop_list.exist():
                 return Response(
                     {'errors': 'Рецепт уже находится в списке покупок.'},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
-            (ShoppingList.objects.get_or_create(
-                user=request.user, recipe=recipe))
+
+            ShoppingList.objects.get_or_create(
+                user=request.user,
+                recipe=recipe
+            )
+
             data = RecipeFollowSerializer(recipe).data
             return Response(data, status=status.HTTP_201_CREATED)
-        recipe = get_object_or_404(Recipe, pk=pk)
 
-        if (ShoppingList.objects.filter(
-           user=request.user, recipe=recipe).exists()):
-            follow = get_object_or_404(ShoppingList, user=request.user,
-                                       recipe=recipe)
+        recipe = get_object_or_404(
+            Recipe,
+            pk=pk
+        )
+
+        follow = ShoppingList.objects.filter(
+            user=request.user,
+            recipe=recipe
+        )
+
+        if follow.exist():
             follow.delete()
             return Response(
                 'Рецепт успешно удален из списка "Избранное".',
                 status=status.HTTP_204_NO_CONTENT
             )
+
         return Response(
             {'errors': 'Данный рецепт отсутствует в списке "Избранное".'},
             status=status.HTTP_400_BAD_REQUEST
@@ -298,22 +347,6 @@ class RecipesViewSet(viewsets.ModelViewSet):
                         ing.amount,
                         ing.ingredient.measurement_unit
                     ]
-        # if not request.user.cart.exists():
-        #     return Response(
-        #         'В корзине пока что нет продуктов',
-        #         status=status.HTTP_400_BAD_REQUEST)
-
-        # ingredients_list = (
-        #     IngredientsRecipe.objects
-        #     .filter(recipe__cart__user=request.user)
-        #     .values('ingredient')
-        #     .annotate(total_amount=Sum('amount'))
-        #     .values_list(
-        #         'ingredient__name',
-        #         'total_amount',
-        #         'ingredient__measurement_unit'
-        #     )
-        #     )
 
         text = ''
         for key, value in shop_list.items():
@@ -332,4 +365,4 @@ class FollowListViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return Follow.objects.filter(user=self.request.user)
+        return UserModel.follower.all()

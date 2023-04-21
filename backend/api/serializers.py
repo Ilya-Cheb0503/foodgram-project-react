@@ -8,6 +8,7 @@ from rest_framework.validators import UniqueTogetherValidator
 
 from users.models import Follow
 from recipes.models import (Ingredient, IngredientsRecipe, Recipe, Tag)
+from api.utils import bulk_create_data
 
 UserModel = get_user_model()
 
@@ -65,9 +66,7 @@ class UserSerializer(serializers.ModelSerializer):
             password = make_password(data['password'])
             data['password'] = password
             return data
-
-        else:
-            return data
+        return data
 
 
 class UserLoginSerializer(serializers.Serializer):
@@ -253,8 +252,9 @@ class IngredientsRecipeSerializer(serializers.ModelSerializer):
     recipe = serializers.PrimaryKeyRelatedField(
         read_only=True
     )
-
     amount = serializers.IntegerField(
+        min_value=1,
+        max_value=1000,
         write_only=True
     )
 
@@ -288,7 +288,8 @@ class RecipeSerializer(serializers.ModelSerializer):
     )
 
     cooking_time = serializers.IntegerField(
-        min_value=1
+        min_value=1,
+        max_value=1000
     )
 
     class Meta:
@@ -328,14 +329,11 @@ class RecipeSerializer(serializers.ModelSerializer):
         recipe = Recipe.objects.create(**validated_data)
         recipe.tags.set(tags_data)
 
-        bulk_create_data = [
-            IngredientsRecipe(
-                recipe=recipe,
-                ingredient=ingredient_data['ingredient'],
-                amount=ingredient_data['amount'])
-            for ingredient_data in ingredients_data
-        ]
-        IngredientsRecipe.objects.bulk_create(bulk_create_data)
+        bulk_create_data(
+            IngredientsRecipe,
+            recipe,
+            ingredients_data
+        )
         return recipe
 
     def update(self, instance, validated_data):
@@ -348,12 +346,10 @@ class RecipeSerializer(serializers.ModelSerializer):
                 amount_set = IngredientsRecipe.objects.filter(
                     recipe__id=instance.id)
                 amount_set.delete()
-                bulk_create_data = (
-                    IngredientsRecipe(
-                        recipe=instance,
-                        ingredient=ingredient_data['ingredient'],
-                        amount=ingredient_data['amount'])
-                    for ingredient_data in ingredients_data
+                bulk_create_data(
+                    IngredientsRecipe,
+                    instance,
+                    ingredients_data
                 )
-                IngredientsRecipe.objects.bulk_create(bulk_create_data)
+
         return super().update(instance, validated_data)
