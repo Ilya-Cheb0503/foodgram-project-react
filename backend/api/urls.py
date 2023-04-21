@@ -60,7 +60,6 @@ router.register(
 )
 
 urlpatterns = [
-    # path('auth/', include(router_auth.urls)),
     path('auth/', include('djoser.urls.authtoken')),
     path('', include(router.urls)),
     path('users/me/', UserViewSet.as_view({'get': 'me'}), name='current_user'),
