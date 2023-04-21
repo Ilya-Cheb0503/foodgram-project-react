@@ -292,7 +292,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
                 recipe=recipe
             )
 
-            if shop_list.s:
+            if shop_list.exists():
                 return Response(
                     {'errors': 'Рецепт уже находится в списке покупок.'},
                     status=status.HTTP_400_BAD_REQUEST,
