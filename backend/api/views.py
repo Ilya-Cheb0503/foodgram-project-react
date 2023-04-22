@@ -209,7 +209,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
         # selected_category = (
         #     self.request.query_params.get('is_favorited')
-        #     or
+        #     or 
         #     self.request.query_params.get('is_in_shopping_cart')
         #     )
 
@@ -225,7 +225,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
         # return Recipe.objects.all()
 
-        is_favorited = self.request.query_params.get('is_favorited')
+        is_favorited = self.request.query_params.get('is_favorited') or False
 
         if is_favorited is True:
             return Recipe.objects.filter(
@@ -233,14 +233,14 @@ class RecipesViewSet(viewsets.ModelViewSet):
             )
 
         is_in_shopping_cart = self.request.query_params.get(
-            'is_in_shopping_cart')
+            'is_in_shopping_cart') or False
 
         if is_in_shopping_cart is True:
             return Recipe.objects.filter(
                 cart__user=self.request.user
             )
-        print(f'is_favorited is {is_favorited} \nAnd is_in_shopping_cart is {is_in_shopping_cart}')
-        # return Recipe.objects.all()
+
+        return Recipe.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
