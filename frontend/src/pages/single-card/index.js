@@ -112,7 +112,7 @@ const SingleCard = ({ loadItem, updateOrders }) => {
             </Button>}
           </div>
           <Ingredients ingredients={ingredients} />
-          <Description description={text|linebreaksbr} />
+          <Description description={text} />
         </div>
     </div>
     </Container>
