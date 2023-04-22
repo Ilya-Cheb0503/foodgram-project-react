@@ -207,40 +207,41 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
 
-        selected_category = (
-            self.request.query_params.get('is_favorited')
-            or 
-            self.request.query_params.get('is_in_shopping_cart')
-            )
+        # selected_category = (
+        #     self.request.query_params.get('is_favorited')
+        #     or 
+        #     self.request.query_params.get('is_in_shopping_cart')
+        #     )
 
-        if selected_category == 'is_favorited':
-            return Recipe.objects.filter(
-                favorites__user=self.request.user
-                )
-
-        elif selected_category == 'is_in_shopping_cart':
-            return Recipe.objects.filter(
-                cart__user=self.request.user
-                )
-
-        return Recipe.objects.all()
-
-        # is_favorited = self.request.query_params.get('is_favorited') or False
-
-        # if int(is_favorited) == 1:
+        # if selected_category == 'is_favorited':
         #     return Recipe.objects.filter(
         #         favorites__user=self.request.user
-        #     )
+        #         )
 
-        # is_in_shopping_cart = self.request.query_params.get(
-        #     'is_in_shopping_cart') or 0
-
-        # if int(is_in_shopping_cart) == 1:
+        # elif selected_category == 'is_in_shopping_cart':
         #     return Recipe.objects.filter(
         #         cart__user=self.request.user
-        #     )
+        #         )
 
         # return Recipe.objects.all()
+
+        is_favorited = self.request.query_params.get('is_favorited')
+
+        if is_favorited is True:
+            return Recipe.objects.filter(
+                favorites__user=self.request.user
+            )
+
+        is_in_shopping_cart = self.request.query_params.get(
+            'is_in_shopping_cart'
+        )
+
+        if is_in_shopping_cart is False:
+            return Recipe.objects.filter(
+                cart__user=self.request.user
+            )
+
+        return Recipe.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
