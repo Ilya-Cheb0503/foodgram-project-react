@@ -225,17 +225,17 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
         # return Recipe.objects.all()
 
-        is_favorited = self.request.query_params.get('is_favorited') or False
+        is_favorited = (self.request.query_params.get('is_favorited') is True)
 
-        if is_favorited == True:
+        if is_favorited is True:
             return Recipe.objects.filter(
                 favorites__user=self.request.user
             )
 
-        is_in_shopping_cart = self.request.query_params.get(
-            'is_in_shopping_cart') or False
+        is_in_shopping_cart = (self.request.query_params.get(
+            'is_in_shopping_cart') is True)
 
-        if is_in_shopping_cart == True:
+        if is_in_shopping_cart is True:
             return Recipe.objects.filter(
                 cart__user=self.request.user
             )
