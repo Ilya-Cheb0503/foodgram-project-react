@@ -239,8 +239,8 @@ class RecipesViewSet(viewsets.ModelViewSet):
             return Recipe.objects.filter(
                 cart__user=self.request.user
             )
-
-        return Recipe.objects.all()
+        print(f'is_favorited is {is_favorited} \nAnd is_in_shopping_cart is {is_in_shopping_cart}')
+        # return Recipe.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
