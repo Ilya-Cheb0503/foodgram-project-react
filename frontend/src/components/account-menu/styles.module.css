@@ -27,7 +27,7 @@
 }
 
 .menuLink {
-  white-space: nowrap;
+  white-space: pre-wrap;
   color: #000;
   background: none;
   border: none;

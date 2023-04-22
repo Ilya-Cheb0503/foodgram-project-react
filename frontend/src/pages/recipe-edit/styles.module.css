@@ -69,7 +69,7 @@
 
 .ingredientsAddedItemTitle {
   max-width: 200px;
-  white-space: nowrap;
+  white-space: pre-wrap;
   overflow: hidden;
   text-overflow: ellipsis;
   display: inline-block;
