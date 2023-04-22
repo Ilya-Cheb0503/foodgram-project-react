@@ -12,6 +12,8 @@ from api.utils import bulk_create_data
 
 UserModel = get_user_model()
 
+symbol_limits = [1, 128, 254, 1000]
+
 
 class TagSerializer(serializers.ModelSerializer):
 
@@ -73,12 +75,12 @@ class UserLoginSerializer(serializers.Serializer):
 
     password = serializers.CharField(
         required=True,
-        max_length=128
+        max_length=symbol_limits[1]
     )
 
     email = serializers.CharField(
         required=True,
-        max_length=254
+        max_length=symbol_limits[2]
     )
 
 
@@ -86,12 +88,12 @@ class ChangePasswordSerializer(serializers.Serializer):
 
     new_password = serializers.CharField(
         required=True,
-        max_length=128
+        max_length=symbol_limits[1]
     )
 
     current_password = serializers.CharField(
         required=True,
-        max_length=128
+        max_length=symbol_limits[1]
     )
 
 
@@ -219,7 +221,8 @@ class RecipeGetSerializer(serializers.ModelSerializer):
 
         ingredients_recipes = IngredientsRecipe.objects.filter(recipe=obj)
         return IngredientsRecipeGetSerializer(ingredients_recipes,
-                                              many=True).data
+                                              many=True
+                                              ).data
 
 
 class IngredientsRecipeGetSerializer(serializers.ModelSerializer):
@@ -253,8 +256,8 @@ class IngredientsRecipeSerializer(serializers.ModelSerializer):
         read_only=True
     )
     amount = serializers.IntegerField(
-        min_value=1,
-        max_value=1000,
+        min_value=symbol_limits[0],
+        max_value=symbol_limits[3],
         write_only=True
     )
 
@@ -288,21 +291,25 @@ class RecipeSerializer(serializers.ModelSerializer):
     )
 
     cooking_time = serializers.IntegerField(
-        min_value=1,
-        max_value=1000
+        min_value=symbol_limits[0],
+        max_value=symbol_limits[3]
     )
 
     class Meta:
         model = Recipe
-        fields = ('id', 'author', 'name', 'text', 'ingredients', 'tags',
-                  'cooking_time', 'image')
+        fields = ('id', 'author', 'name',
+                  'text', 'ingredients', 'tags',
+                  'cooking_time', 'image'
+                  )
         read_only_fields = ('id', 'author', 'tags')
 
     def validate(self, data):
 
         ingredients = self.initial_data.get('ingredients')
         ingredients_cart = [ingredient['id'] for ingredient in ingredients]
+
         if len(ingredients_cart) != len(set(ingredients_cart)):
+
             raise serializers.ValidationError(
                 ('Кажется, какой-то ингредиент повторяется. '
                  'Необходимо перепроверить список.')
@@ -313,12 +320,15 @@ class RecipeSerializer(serializers.ModelSerializer):
 
         self.fields.pop('ingredients')
         self.fields.pop('tags')
+
         representation = super().to_representation(instance)
         representation['ingredients'] = IngredientsRecipeGetSerializer(
-            IngredientsRecipe.objects.filter(recipe=instance), many=True
+            IngredientsRecipe.objects.filter(recipe=instance),
+            many=True
         ).data
         representation['tags'] = TagSerializer(
-            instance.tags, many=True
+            instance.tags,
+            many=True
         ).data
         return representation
 
@@ -337,14 +347,19 @@ class RecipeSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, instance, validated_data):
+
         if 'tags' in self.validated_data:
+
             tags_data = validated_data.pop('tags')
             instance.tags.set(tags_data)
+
         if 'ingredients' in self.validated_data:
+
             ingredients_data = validated_data.pop('ingredients')
             with transaction.atomic():
                 amount_set = IngredientsRecipe.objects.filter(
-                    recipe__id=instance.id)
+                    recipe__id=instance.id
+                )
                 amount_set.delete()
                 bulk_create_data(
                     IngredientsRecipe,
