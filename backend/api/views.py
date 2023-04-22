@@ -207,24 +207,6 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
 
-        # selected_category = (
-        #     self.request.query_params.get('is_favorited')
-        #     or 
-        #     self.request.query_params.get('is_in_shopping_cart')
-        #     )
-
-        # if selected_category == 'is_favorited':
-        #     return Recipe.objects.filter(
-        #         favorites__user=self.request.user
-        #         )
-
-        # elif selected_category == 'is_in_shopping_cart':
-        #     return Recipe.objects.filter(
-        #         cart__user=self.request.user
-        #         )
-
-        # return Recipe.objects.all()
-
         is_favorited = self.request.query_params.get('is_favorited') or False
 
         if is_favorited:
@@ -383,5 +365,7 @@ class FollowListViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-
-        return Follow.objects.filter(user=self.request.user)
+        
+        user = get_object_or_404(UserModel, username=self.request.user)
+        return user.following.all()
+        # return Follow.objects.filter(user=self.request.user)
