@@ -350,7 +350,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
         text = ''
         for key, value in shop_list.items():
-            text += f'\n{key} ({value[1]}) - {str(value[0])}'
+            text += f'\n{key} ({value[1]}) - {str(value[0])}\n'
 
         file = HttpResponse(
             f'Необходимые продукты:\n {text}', content_type='text/plain'
